@@ -17,9 +17,12 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 
+const posts = [];
+
 app.get("/", function(req, res) {
   res.render("home", {
-    homePageText: homeStartingContent
+    homePageText: homeStartingContent,
+    blogPosts: posts
   });
 });
 
@@ -39,10 +42,26 @@ app.get("/compose", function(req, res) {
   res.render("compose");
 });
 
+app.get("/posts/:postTitle", function(req, res){
+
+posts.forEach(function(item){
+  if(item.postTitle.toLowerCase() === req.params.postTitle.toLowerCase()) {
+    console.log("Match Found!");
+  } else {
+    console.log("Not a match");
+  }
+});
+
+
+});
+
 app.post("/compose", function(req, res){
-  
-  const post = req.body.blogPost;
-  console.log(post);
+
+  const post = {postTitle: req.body.blogPostTitle,
+              postBody: req.body.blogPostBody};
+              posts.push(post);
+       res.redirect("/");
+
 });
 
 
